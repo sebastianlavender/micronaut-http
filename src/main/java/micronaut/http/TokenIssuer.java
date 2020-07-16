@@ -2,16 +2,17 @@ package micronaut.http;
 
 import io.micronaut.context.annotation.Property;
 
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
 public class TokenIssuer {
 
-    private final AuthClient authClient;
+    private final Provider<AuthClient> authClient;
     private final String clientId;
 
     public TokenIssuer(
-            AuthClient authClient,
+            Provider<AuthClient> authClient,
             @Property(name = "client.id") String clientId
     ) {
         this.authClient = authClient;
@@ -19,6 +20,6 @@ public class TokenIssuer {
     }
 
     public Token retrieveToken() {
-        return authClient.retrieveToken(new AuthRequest(clientId));
+        return authClient.get().retrieveToken(new AuthRequest(clientId));
     }
 }
